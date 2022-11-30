@@ -1,0 +1,43 @@
+{
+  "name": "@garfish/browser-snapshot",
+  "version": "1.12.0",
+  "description": "browser-snapshot module.",
+  "keywords": [
+    "garfish",
+    "browser-snapshot"
+  ],
+  "author": "zhouxiao <codingzx@gmail.com>",
+  "homepage": "http://garfish.bytedance.com",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bytedance/garfish.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bytedance/garfish/issues"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/index.js"
+    },
+    "./*": "./*"
+  },
+  "main": "dist/index.js",
+  "module": "dist/esm/index.js",
+  "types": "./src/index.ts",
+  "scripts": {
+    "build": "",
+    "dev": "cross-env WATCH=true tsup src/index.ts"
+  },
+  "dependencies": {
+    "@garfish/core": "workspace:*",
+    "@garfish/utils": "workspace:*"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public",
+    "types": "./dist/index.d.ts"
+  },
+  "gitHead": "da33dd16bb9e99588f34079f8b961d0cf9f059fc"
+}
