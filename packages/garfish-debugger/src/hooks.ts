@@ -1,23 +1,28 @@
-// console.log("Hello World!");
-
 
 import { AsyncHook, PluginSystem, AsyncWaterfallHook, SyncHook, SyncWaterfallHook } from "@garfish/hooks";
 
 const hooks = new PluginSystem({
-  a: new AsyncHook(),
-  b: new AsyncWaterfallHook('AsyncWaterfallHook')
+  a: new AsyncHook<any,string>(),
+//   b: new AsyncWaterfallHook('AsyncWaterfallHook')
 });
 
 
 
 hooks.usePlugin({
   name: 'test1',
-  a: (a) => {
+    a: async(a) => {
     console.log(a, 'test1')
     return 'xixixiix '
   }
 });
 
+hooks.usePlugin({
+    name: 'test222',
+      a: async(a) => {
+      console.log(a, 'test222')
+      return 'test222test222test222 '
+    }
+  });
 
 hooks.usePlugin({
   name: 'test2',

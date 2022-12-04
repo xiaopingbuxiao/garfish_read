@@ -1,5 +1,5 @@
 {
-  "name": "garfish_debugger",
+  "name": "garfish-debugger",
   "version": "1.0.0",
   "description": "My webpack project",
   "main": "index.js",
@@ -32,6 +32,8 @@
     "workbox-webpack-plugin": "^6.5.4"
   },
   "dependencies": {
-    "@garfish/hooks":"workspace:*"
+    "@garfish/hooks":"workspace:*",
+    "@garfish/loader":"workspace:*",
+    "garfish":"workspace:*"
   }
 }

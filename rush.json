@@ -396,14 +396,6 @@
     //   "tags": [ "tools" ]
     // }
     {
-      "packageName": "vue3_garfish",
-      "projectFolder": "packages/vue3_garfish"
-    },
-    {
-      "packageName": "garfish_debugger",
-      "projectFolder": "packages/garfish_debugger"
-    },
-    {
       "packageName": "@garfish/bridge-react",
       "projectFolder": "garfish/bridge-react"
     },
@@ -467,6 +459,21 @@
       "packageName": "@garfish/utils",
       "projectFolder": "garfish/utils"
     },
-    
+    {
+      "packageName": "vue3-garfish",
+      "projectFolder": "packages/vue3-garfish"
+    },
+    {
+      "packageName": "garfish-debugger",
+      "projectFolder": "packages/garfish-debugger"
+    },
+    {
+      "packageName": "app-main",
+      "projectFolder": "packages/app-main"
+    },
+    {
+      "packageName": "vue2-demo",
+      "projectFolder": "packages/vue2-demo"
+    }
   ]
 }

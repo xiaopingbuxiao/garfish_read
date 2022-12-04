@@ -1,7 +1,7 @@
 export type mimeType = ReturnType<typeof parseContentType>;
 
-export function parseContentType(input: string) {
-  input = input?.trim();
+export function parseContentType(input: string) { // 用来将请求头进行处理 text/html; charset=utf-8 ===> . type:text subType html
+  input = input?.trim();                          // multipart/form-data; boundary=something ===> type:multipart subType:form-data
   if (!input) return null;
 
   let idx = 0;

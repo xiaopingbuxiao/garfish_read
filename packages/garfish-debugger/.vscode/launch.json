@@ -13,7 +13,7 @@
             "sourceMapPathOverrides": {
                 "meteor://💻app/*": "${workspaceFolder}/*",
                 "webpack:///./~/*": "${workspaceFolder}/node_modules/*",
-                "webpack://garfish_debugger/*": "${workspaceFolder}/*"
+                "webpack://garfish-debugger/*": "${workspaceFolder}/*"
             }
         }
     ]

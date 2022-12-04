@@ -10,7 +10,6 @@ import {
   isJsType,
   isCssType,
   isHtmlType,
-  parseContentType,
 } from '@garfish/utils';
 import { StyleManager } from './managers/style';
 import { ModuleManager } from './managers/module';
@@ -77,7 +76,7 @@ export class Loader {
   /** @deprecated */
   public requestConfig: RequestInit | ((url: string) => RequestInit);
 
-  public hooks = new PluginSystem({
+  public hooks = new PluginSystem({ /* 之前已经看过hooks 源码  loader 的所有生命周期如下  */
     error: new SyncHook<[Error, { scope: string }], void>(),
     loaded: new SyncWaterfallHook<LoadedHookArgs<Manager>>('loaded'),
     clear: new SyncWaterfallHook<{
@@ -121,11 +120,11 @@ export class Loader {
       this.clear(scope, fileType);
     }
   }
-
-  usePlugin(options: LoaderPlugin) {
+  /* 在已有的生命周期上注册事件 */
+  usePlugin(options: LoaderPlugin) { 
     this.hooks.usePlugin(options);
   }
-
+ /* 在已有的生命周期上注册事件 这里已经限定了 name 为 loader-lifecycle 后面是有什么作用？？？ */
   setLifeCycle(lifeCycle: Partial<LoaderLifecycle>) {
     this.hooks.usePlugin({
       name: 'loader-lifecycle',
@@ -142,7 +141,7 @@ export class Loader {
   }
 
   // Unable to know the final data type, so through "generics"
-  async load<T extends Manager>({
+  async load<T extends Manager>({  /* 先不细究 就是用来加载远程资源的 */
     scope,
     url,
     isRemoteModule = false,
@@ -157,12 +156,12 @@ export class Loader {
   }): Promise<LoadedHookArgs<T>['value']> {
     const { options, loadingList, cacheStore } = this;
 
-    const res = loadingList[url];
+    const res = loadingList[url]; /* 先从 loadingList 中查看是否存在 url 为key 如果存在就返回 */
     if (res) {
       return res;
     }
-
-    let appCacheContainer = cacheStore[scope];
+    
+    let appCacheContainer = cacheStore[scope]; /* 如果 loadingList url 不存在  查看是否存在当前的scope  */
     if (!appCacheContainer) {
       appCacheContainer = cacheStore[scope] = new AppCacheContainer(
         options.maxSize,
@@ -178,7 +177,7 @@ export class Loader {
         if (container !== appCacheContainer) {
           if (container.has(url)) {
             const result = container.get(url);
-            cachedDataSet.add(result);
+            cachedDataSet.add(result);   // appCacheContainer 是通过url 来缓存的  因此加入是多个应用引用了 同一个react 此时就会命中
             appCacheContainer.set(url, result, result.fileType);
             return Promise.resolve(copyResult(result));
           }
@@ -188,16 +187,16 @@ export class Loader {
 
     const requestConfig = mergeConfig(this, url);
     // Tells browsers to include credentials in both same- and cross-origin requests, and always use any credentials sent back in responses.
-    requestConfig.credentials = CrossOriginCredentials[crossOrigin];
-    const resOpts = this.hooks.lifecycle.beforeLoad.emit({
-      url,
+    requestConfig.credentials = CrossOriginCredentials[crossOrigin];//告诉浏览器在同源请求和跨源请求中都包含凭据，并始终使用在响应中发送回的任何凭据。 
+    const resOpts = this.hooks.lifecycle.beforeLoad.emit({    // fetch 的  credentials:include | same-origin | omit
+      url,                                                    // 一些 html 的标签设置 crossorigin: anonymous | use-credentials
       scope,
       requestConfig,
     });
 
-    const request = getRequest(this.hooks.lifecycle.fetch);
+    const request = getRequest(this.hooks.lifecycle.fetch);  // {type:"fetch",listeners:Set<>} // 如果你想要自定义 fetch 的话 只能注册一次，因为 fetch 是 AsyncHook 多次注册 只有第一次会执行
     const loadRes = request(resOpts.url, resOpts.requestConfig)
-      .then(({ code, size, result, type }) => {
+      .then(({ code, size, result, type,mimeType }) => {
         let managerCtor,
           fileType: FileTypes | '' = '';
 
@@ -228,7 +227,7 @@ export class Loader {
           managerCtor = StyleManager;
         }
 
-        // Use result.url, resources may be redirected
+        // 不同的类型创建不同的 manager     Use result.url, resources may be redirected
         const resourceManager: Manager | null = managerCtor
           ? new managerCtor(code, result.url)
           : null;
@@ -257,7 +256,7 @@ export class Loader {
         throw e; // Let the upper application catch the error
       })
       .finally(() => {
-        loadingList[url] = null;
+        loadingList[url] = null;   // 将结果返回 clone 一下 返回 同时下面又通过 url 将结果再次缓存了一次
       });
 
     loadingList[url] = loadRes;
